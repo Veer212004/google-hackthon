@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard - FairHire</title>
+    <link href="../components/navbar.css" rel="stylesheet">
+    <link href="../assets/css/styles.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../components/navbar.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('navbar-container').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching navbar:', error);
+                });
+        });
+    </script>
+</head>
+<body class="min-h-screen">
+    <div id="navbar-container"></div>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64  h-screen fixed shadow-lg">
+            <div class="p-6">
+                <div class="text-2xl font-bold text-primary mb-8">Menu</div>
+                   <nav class="space-y-2">
+                    <a href="#dashboard" class="block py-2.5 px-4 rounded transition duration-200 bg-secondary text-white">
+                        Dashboard
+                    </a>
+                    <a href="#job-postings" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-100">
+                        Job Postings
+                    </a>
+                    <a href="#candidates" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100">
+                        Candidates
+                    </a>
+                    <a href="#analytics" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100">
+                        Analytics
+                    </a>
+                    <a href="#settings" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100">
+                        Settings
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 p-8 w-full">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold">Recruiter Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-white p-2 rounded-full shadow">
+                        🔔
+                    </button>
+                    <img src="../assets/recruiter-avatar.jpg" alt="Profile" class="w-10 h-10 rounded-full">
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div id="dashboard" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="feature-card bg-blue-40 border border-blue-200 p-6 rounded-lg shadow-lg hover:shadow-xl">
+                    <div class="text-gray-500">Active Jobs</div>
+                    <div class="text-3xl font-bold">24</div>
+                    <div class="text-yellow-300 text-sm">↑ 3 new this week</div>
+                </div>
+                <div class="feature-card bg-yellow-40 border border-yellow-200 p-6 rounded-lg shadow-lg hover:shadow-xl">
+                    <div class="text-gray-500">Total Applications</div>
+                    <div class="text-3xl font-bold">847</div>
+                    <div class="text-green-400 text-sm">↑ 12% this month</div>
+                </div>
+                <div class="feature-card bg-green-40 border border-green-200 p-6 rounded-lg shadow-lg hover:shadow-xl">
+                    <div class="text-gray-500">Interviews Scheduled</div>
+                    <div class="text-3xl font-bold">32</div>
+                    <div class="text-yellow-300 text-sm">This week</div>
+                </div>
+                <div class="feature-card bg-secondary/10 border border-secondary/30 p-6 rounded-lg shadow-lg hover:shadow-xl">
+                    <div class="text-gray-500">Time to Hire</div>
+                    <div class="text-3xl font-bold">18d</div>
+                    <div class="text-green-400 text-sm">↓ 2 days faster</div>
+                </div>
+            </div>
+
+            <!-- Recent Applications & Analytics -->
+            <div id="analytics" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- Recent Applications -->
+                <div class="bg-yellow-50 rounded-lg shadow-lg p-8">
+                    <h2 class="text-xl font-bold mb-4">Recent Applications</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold">Senior Frontend Developer</h3>
+                                <p class="text-gray-500">12 new applications</p>
+                            </div>
+                            <button class="text-secondary hover:underline">Review</button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold">DevOps Engineer</h3>
+                                <p class="text-gray-500">8 new applications</p>
+                            </div>
+                            <button class="text-secondary hover:underline">Review</button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold">Product Manager</h3>
+                                <p class="text-gray-500">15 new applications</p>
+                            </div>
+                            <button class="text-secondary hover:underline">Review</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Chart -->
+                <div class="bg-yellow-50 rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Application Trends</h2>
+                    <canvas id="applicationsChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="bg-yellow-50 rounded-lg shadow-lg p-6 mb-8">
+                <h2 class="text-xl font-bold mb-6">Settings</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Profile Settings -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-lg">Profile Settings</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Profile Picture</label>
+                                <div class="flex items-center space-x-4">
+                                    <img src="../assets/recruiter-avatar.jpg" alt="Profile" class="w-16 h-16 rounded-full">
+                                    <button class="text-secondary hover:underline">Change Photo</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Name</label>
+                                <input type="text" value="John Doe" class="w-full p-2 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" value="john@fairhire.com" class="w-full p-2 border rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="space-y-6">
+                        <h3 class="font-bold text-lg">Notification Preferences</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span>Email Notifications</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>Desktop Notifications</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>Weekly Reports</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Settings Button -->
+                <div class="mt-8 flex justify-end">
+                    <button class="bg-secondary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add this script before the closing body tag, after the Chart.js script -->
+    <script>
+        // Settings functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile picture change
+            const changePhotoBtn = document.querySelector('button.text-secondary');
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
+    
+            changePhotoBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+    
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const profilePics = document.querySelectorAll('img[alt="Profile"]');
+                        profilePics.forEach(pic => {
+                            pic.src = e.target.result;
+                        });
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+    
+            // Save settings functionality
+            const saveButton = document.querySelector('#settings button.bg-secondary');
+            const nameInput = document.querySelector('input[type="text"]');
+            const emailInput = document.querySelector('input[type="email"]');
+            const notificationToggles = document.querySelectorAll('#settings input[type="checkbox"]');
+    
+            saveButton.addEventListener('click', () => {
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+    
+                // Save to localStorage (in real app, this would be an API call)
+                const settings = {
+                    name: nameInput.value,
+                    email: emailInput.value,
+                    notifications: {
+                        email: notificationToggles[0].checked,
+                        desktop: notificationToggles[1].checked,
+                        weekly: notificationToggles[2].checked
+                    }
+                };
+    
+                localStorage.setItem('recruiterSettings', JSON.stringify(settings));
+    
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
+                successMsg.textContent = 'Settings saved successfully!';
+                document.body.appendChild(successMsg);
+    
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 3000);
+            });
+    
+            // Load saved settings
+            const savedSettings = localStorage.getItem('recruiterSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                nameInput.value = settings.name;
+                emailInput.value = settings.email;
+                notificationToggles[0].checked = settings.notifications.email;
+                notificationToggles[1].checked = settings.notifications.desktop;
+                notificationToggles[2].checked = settings.notifications.weekly;
+            }
+        });
+    </script>
+    <script>
+        // Initialize Chart
+        const ctx = document.getElementById('applicationsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Applications',
+                    data: [65, 78, 90, 85, 99, 112],
+                    borderColor: '#26A69A',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
